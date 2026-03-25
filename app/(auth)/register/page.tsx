@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { LuMail, LuLock, LuUser, LuLoader } from 'react-icons/lu';
@@ -32,7 +31,6 @@ export default function RegisterPage() {
         setLoading(true);
 
         try {
-            // Register
             const res = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -46,19 +44,8 @@ export default function RegisterPage() {
                 return;
             }
 
-            // Auto-login after registration
-            const signInRes = await signIn('credentials', {
-                email,
-                password,
-                redirect: false,
-            });
-
-            if (signInRes?.error) {
-                setError('Account created but login failed. Please sign in manually.');
-            } else {
-                router.push('/dashboard');
-                router.refresh();
-            }
+            // Redirect to login page after successful registration
+            router.push('/login');
         } catch {
             setError('Something went wrong. Please try again.');
         } finally {
